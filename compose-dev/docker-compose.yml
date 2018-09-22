@@ -1,0 +1,39 @@
+version: "3"
+
+# DEV
+
+services:
+
+  mysql:
+    image: mysql:5.7.23
+    ports:
+      - "3306:3306"
+    volumes:
+      - ~/data/dev/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    restart: always
+
+  jenkins:
+    image: jenkins-maven:2.141-alpine-3.5.4
+    build: ./jenkins
+    ports:
+      - "8080:8080"
+    volumes:
+      - ~/data/dev/jenkins:/var/jenkins_home
+      - ~/data/dev/m2/:/var/maven/.m2
+      - ~/data/dev/git_repo/:/var/git_repo
+      - ~/data/dev/git/:/var/git
+    restart: always
+
+  sonar:
+    image: sonarqube:6.7.5-alpine
+    ports:
+      - "9000:9000"
+    depends_on: 
+      - mysql
+    environment: 
+      - SONARQUBE_JDBC_USERNAME=sonar
+      - SONARQUBE_JDBC_PASSWORD=sonar
+      - SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance
+    restart: always

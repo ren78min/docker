@@ -1,0 +1,14 @@
+version: "3"
+
+# APP
+
+services:
+
+  mysql:
+    image: mysql:5.7.23
+    volumes:
+      - ~/data/app/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    restart: always
+
