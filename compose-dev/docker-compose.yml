@@ -21,19 +21,24 @@ services:
       - "8080:8080"
     volumes:
       - ~/data/dev/jenkins:/var/jenkins_home
-      - ~/data/dev/m2/:/var/maven/.m2
-      - ~/data/dev/git_repo/:/var/git_repo
-      - ~/data/dev/git/:/var/git
+      - ~/data/dev/jenkins.root:/root
+      - ~/data/dev/maven_repo:/root/.m2
+      - ~/data/dev/git_repo:/var/git_repo
     restart: always
 
-  sonar:
+  sonarqube:
     image: sonarqube:6.7.5-alpine
     ports:
       - "9000:9000"
-    depends_on: 
+    depends_on:
       - mysql
-    environment: 
-      - SONARQUBE_JDBC_USERNAME=sonar
-      - SONARQUBE_JDBC_PASSWORD=sonar
-      - SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance
+    environment:
+      - SONARQUBE_JDBC_USERNAME=sonarqube
+      - SONARQUBE_JDBC_PASSWORD=sonarqube
+      - SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonarqube?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance
+    volumes:
+      - ~/data/dev/sonarqube.tmp:/tmp
+      - ~/data/dev/sonarqube.plugins:/opt/sonarqube/extensions/plugins
+      - ~/data/dev/sonarqube.logs:/opt/sonarqube/logs
+      - ~/data/dev/sonarqube.temp:/opt/sonarqube/temp
     restart: always

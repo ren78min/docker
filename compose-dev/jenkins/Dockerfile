@@ -15,4 +15,3 @@ RUN mkdir -p ${DESTINATION_DIR} \
   && ln -s ${DESTINATION_DIR}/bin/mvn /usr/bin/mvn
 
 ENV MAVEN_HOME ${DESTINATION_DIR}
-ENV MAVEN_CONFIG "${DESTINATION_DIR}/.m2"
