@@ -14,18 +14,6 @@ services:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
     restart: always
 
-  jenkins:
-    image: jenkins-maven:2.141-alpine-3.5.4
-    build: ./jenkins
-    ports:
-      - "8080:8080"
-    volumes:
-      - ~/data/dev/jenkins:/var/jenkins_home
-      - ~/data/dev/jenkins.root:/root
-      - ~/data/dev/maven_repo:/root/.m2
-      - ~/data/dev/git_repo:/var/git_repo
-    restart: always
-
   sonarqube:
     image: sonarqube:6.7.5-alpine
     ports:
@@ -41,4 +29,18 @@ services:
       - ~/data/dev/sonarqube.plugins:/opt/sonarqube/extensions/plugins
       - ~/data/dev/sonarqube.logs:/opt/sonarqube/logs
       - ~/data/dev/sonarqube.temp:/opt/sonarqube/temp
+    restart: always
+
+  jenkins:
+    image: jenkins-maven:2.141-alpine-3.5.4
+    build: ./jenkins
+    ports:
+      - "8080:8080"
+    depends_on:
+      - sonarqube
+    volumes:
+      - ~/data/dev/jenkins:/var/jenkins_home
+      - ~/data/dev/jenkins.root:/root
+      - ~/data/dev/maven_repo:/root/.m2
+      - ~/data/dev/git_repo:/var/git_repo
     restart: always
